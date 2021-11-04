@@ -1,15 +1,45 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VpcCidrBlock:
+    Description: Input a VPC IPv4 CidrBlock.
+    Type: String
+  VpcName:
+    Description: Input a VPC name. This Parameter will be a Name tag.
+    Type: String
+    Default: ""
+  AZ:
+    Description: Input a AZ where Public Subnet will be created.
+    Type: AWS::EC2::AvailabilityZone::Name
+  PublicSubnetCidrBlock:
+    Description: Input a Public Subnet IPv4 CidrBlock.
+    Type: String
+  PublicSubnetName:
+    Description: Input a Public Subnet name. This Parameter will be a Name tag.
+    Type: String
+    Default: ""
+
 
 Resources:
   PracticeVPC:
     Type: AWS::EC2::VPC
     Properties: 
-      CidrBlock: 10.1.0.0/16
+      CidrBlock: !Ref VpcCidrBlock
       EnableDnsHostnames: true
       EnableDnsSupport: true
       InstanceTenancy: default
       Tags: 
         - Key: Name
-          Value: PracticeVPC
+          Value: !Ref VpcName
+  PracticePublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: !Ref AZ
+      CidrBlock: !Ref PublicSubnetCidrBlock
+      MapPublicIpOnLaunch: true
+      Tags: 
+        - Key: Name
+          Value: !Ref PublicSubnetName
+      VpcId: !Ref PracticeVPC
+
 
 
