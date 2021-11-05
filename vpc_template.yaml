@@ -21,8 +21,10 @@ Parameters:
     Description: Input a IntenetGW name. This Parameter will be a Name tag.
     Type: String
     Default: ""
-
-
+  RouteTableName:
+    Description: Input a RouteTable name. This Parameter will be a Name tag.
+    Type: String
+    Default: ""
 
 Resources:
   PracticeVPC:
@@ -35,6 +37,7 @@ Resources:
       Tags: 
         - Key: Name
           Value: !Ref VpcName
+
   PracticePublicSubnet:
     Type: AWS::EC2::Subnet
     Properties: 
@@ -45,18 +48,38 @@ Resources:
         - Key: Name
           Value: !Ref PublicSubnetName
       VpcId: !Ref PracticeVPC
+
   PracticeInternetGW:
     Type: AWS::EC2::InternetGateway
     Properties: 
       Tags: 
         - Key: Name
           Value: !Ref InternetGwName
-  MyVPCGatewayAttachment:
-  Type: AWS::EC2::VPCGatewayAttachment
-  Properties: 
-    InternetGatewayId: !Ref PracticeInternetGW
-    VpcId: !Ref PracticeVPC
 
+  PracticeVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref PracticeInternetGW
+      VpcId: !Ref PracticeVPC
 
+  PracticeRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Ref RouteTableName
+      VpcId: !Ref PracticeVPC
 
+  PracticePublicRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref PracticeInternetGW
+      RouteTableId: !Ref PracticeRouteTable
+
+  PracticeSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties: 
+        RouteTableId: !Ref PracticeRouteTable
+        SubnetId: !Ref PracticePublicSubnet
 
