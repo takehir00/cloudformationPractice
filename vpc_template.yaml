@@ -17,6 +17,11 @@ Parameters:
     Description: Input a Public Subnet name. This Parameter will be a Name tag.
     Type: String
     Default: ""
+  InternetGwName:
+    Description: Input a IntenetGW name. This Parameter will be a Name tag.
+    Type: String
+    Default: ""
+
 
 
 Resources:
@@ -40,6 +45,18 @@ Resources:
         - Key: Name
           Value: !Ref PublicSubnetName
       VpcId: !Ref PracticeVPC
+  PracticeInternetGW:
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Ref InternetGwName
+  MyVPCGatewayAttachment:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties: 
+    InternetGatewayId: !Ref PracticeInternetGW
+    VpcId: !Ref PracticeVPC
+
 
 
 
