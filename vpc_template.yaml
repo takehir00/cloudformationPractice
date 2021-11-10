@@ -47,46 +47,46 @@ Resources:
 
   PracticePublicSubnet:
     Type: AWS::EC2::Subnet
-    Properties: 
+    Properties:
       AvailabilityZone: !Ref AZ
       CidrBlock: !Ref PublicSubnetCidrBlock
       MapPublicIpOnLaunch: true
-      Tags: 
+      Tags:
         - Key: Name
           Value: !Ref PublicSubnetName
       VpcId: !Ref PracticeVPC
 
   PracticeInternetGW:
     Type: AWS::EC2::InternetGateway
-    Properties: 
-      Tags: 
+    Properties:
+      Tags:
         - Key: Name
           Value: !Ref InternetGwName
 
   PracticeVPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
-    Properties: 
+    Properties:
       InternetGatewayId: !Ref PracticeInternetGW
       VpcId: !Ref PracticeVPC
 
   PracticeRouteTable:
     Type: AWS::EC2::RouteTable
-    Properties: 
-      Tags: 
+    Properties:
+      Tags:
         - Key: Name
           Value: !Ref RouteTableName
       VpcId: !Ref PracticeVPC
 
   PracticePublicRoute:
     Type: AWS::EC2::Route
-    Properties: 
+    Properties:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref PracticeInternetGW
       RouteTableId: !Ref PracticeRouteTable
 
   PracticeSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
-      Properties: 
+      Properties:
         RouteTableId: !Ref PracticeRouteTable
         SubnetId: !Ref PracticePublicSubnet
 
